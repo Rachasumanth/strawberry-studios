@@ -1,0 +1,15 @@
+{
+  "name": "@strawberry/shared",
+  "version": "0.1.0",
+  "description": "Strawberry Studios - Shared TypeScript types and utilities",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "devDependencies": {
+    "typescript": "latest"
+  }
+}
