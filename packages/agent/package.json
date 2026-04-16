@@ -1,0 +1,13 @@
+{
+  "name": "@strawberry/agent",
+  "version": "0.1.0",
+  "description": "Strawberry Studios - Claw Worker Python daemon",
+  "private": true,
+  "scripts": {
+    "dev": "python main.py",
+    "build": "echo 'Agent is Python-based'"
+  },
+  "dependencies": {
+    "@strawberry/shared": "workspace:*"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "@strawberry/app",
+  "version": "0.1.0",
+  "description": "Strawberry Studios - Tauri desktop application",
+  "private": true,
+  "scripts": {
+    "dev": "tauri dev",
+    "build": "tauri build"
+  },
+  "dependencies": {
+    "@strawberry/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "latest",
+    "@tauri-apps/api": "latest"
+  }
+}
