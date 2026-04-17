@@ -1,80 +1,86 @@
 # Strawberry Studios
 
-Strawberry Studios is an AI-powered desktop application built with modern web technologies and Rust. This monorepo contains all the components needed to build and deploy the application.
+**A Distributed AI Operating System — Your Virtual AI Lab**
 
-## Project Overview
+Strawberry Studios makes heterogeneous compute (Local, AWS, Colab, etc.) feel like
+one unified workspace. It is the "VS Code of AI infrastructure" — a desktop application
+where you visually build, run, and reproduce AI experiments across any hardware.
 
-Strawberry Studios is a desktop application that leverages artificial intelligence to enhance user productivity and creativity. The project is structured as a monorepo using pnpm workspaces, enabling seamless code sharing and dependency management across multiple packages.
+---
+
+## What It Is
+
+A **Tauri desktop app** (Rust + React) that lets AI researchers:
+
+1. **See all their compute** in one place — local machine, cloud VMs, Colab notebooks
+2. **Build pipelines visually** — drag-and-drop nodes in a canvas (like a DAG editor)
+3. **Write code** in a Jupyter-like notebook that stays in sync with the node graph
+4. **Run on any machine** — one-command install of the Claw Worker daemon on any hardware
+5. **Package experiments** as `.berry` files — reproducible, shareable, portable
+
+---
 
 ## Architecture
 
-### Packages
+```
+DESKTOP APP (Tauri — Rust + React)
+├── Node Editor     → ReactFlow canvas — visual pipeline builder
+├── Notebook        → CodeMirror cells — Jupyter-like code/markdown
+├── Asset Browser   → .berry file manager — datasets, weights, scripts
+└── RPC Server      → WebSocket/gRPC bridge to Claw Workers
 
-- **@strawberry/app** - Tauri desktop application frontend built with React and TypeScript
-  - Provides the user interface and desktop integration
-  - Built on Tauri for cross-platform compatibility (Windows, macOS, Linux)
-
-- **@strawberry/agent** - Claw Worker Python daemon
-  - Handles background processing and AI operations
-  - Communicates with the desktop app via IPC
-  - Manages long-running tasks and worker processes
-
-- **@strawberry/shared** - Shared TypeScript types and utilities
-  - Common type definitions used across packages
-  - Utility functions and constants
-  - Ensures type safety across the monorepo
-
-## Technology Stack
-
-- **Frontend**: React, TypeScript, Tauri
-- **Backend**: Python (Claw Worker daemon)
-- **Build Tools**: Turbo, pnpm
-- **Monorepo Manager**: pnpm workspaces
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js 16+ and pnpm
-- Python 3.8+
-- Rust (for Tauri development)
-
-### Installation
-
-```bash
-# Install dependencies
-pnpm install
-
-# Run development servers
-pnpm dev
-
-# Build all packages
-pnpm build
+CLAW WORKER (Python daemon — runs on any hardware)
+├── WebSocket server (port 7331) — receives commands from desktop app
+├── Script executor — runs Python/Rust/Mojo, streams stdout back
+├── Telemetry — CPU/RAM/GPU every 5s
+└── Systemd service — auto-reconnects on disconnect
 ```
 
-## Development Workflow
+---
 
-This monorepo uses Turbo for build orchestration, enabling:
+## Key Design Decisions
 
-- Parallel builds across packages
-- Incremental builds for changed packages
-- Caching for faster development cycles
-- Task pipelines with dependency management
+| Decision | Choice | Reason |
+|----------|--------|--------|
+| Desktop framework | **Tauri** (not Electron) | 15MB binary, Rust safety, native speed |
+| Node editor | **ReactFlow** | Best graph UI library |
+| Notebook | **CodeMirror 6** | Lightweight, fast, extensible |
+| Claw Worker | **Pure Python** | Works on any machine with Python |
+| Package format | **.berry** (ZIP+JSON) | One file = one reproducible experiment |
+| Communication | **WebSocket → gRPC → HTTP** | Adaptive to any network environment |
 
-## Project Structure
+---
+
+## Monorepo Structure
 
 ```
-.
+strawberry-studios/
 ├── packages/
-│   ├── app/          # Tauri desktop application
-│   ├── agent/        # Python daemon worker
-│   └── shared/       # Shared types and utilities
-├── package.json      # Root package.json with workspaces
-├── pnpm-workspace.yaml  # pnpm workspace configuration
-├── turbo.json        # Turbo build pipeline configuration
-└── README.md         # This file
+│   ├── app/          # Tauri desktop application (React + TypeScript)
+│   ├── agent/        # Claw Worker Python daemon
+│   └── shared/       # Shared TypeScript types and utilities
+├── package.json      # pnpm workspace root
+├── pnpm-workspace.yaml
+└── turbo.json        # Build pipeline
 ```
 
-## License
+---
 
-Strawberry Studios - All rights reserved
+## The .berry Package Format
+
+Projects are saved as `.berry` files (ZIP archives):
+```
+project.berry (ZIP)
+├── project.json    # Node graph + notebook cells (Unified State Model)
+├── /scripts        # Python/Rust/Mojo source files
+├── /data           # Content-addressed datasets & weights (hash dedup)
+└── /env            # Dependencies (conda env.yaml, pip requirements.txt)
+```
+
+---
+
+## Built By
+
+This project is being autonomously developed by an agentic pipeline:
+- **OpenClaw (Gemini AI)** — Research brain, plans and decides what to build
+- **OpenHands (Claude/GPT-4o)** — Coding executor, writes the actual code
