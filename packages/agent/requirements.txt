@@ -1,4 +1,4 @@
 
 fastapi
 uvicorn
-websockets\npsutil
+websockets\npsutil\npsutil\npsutil
