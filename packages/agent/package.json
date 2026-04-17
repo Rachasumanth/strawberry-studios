@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "Strawberry Studios - Claw Worker Python daemon",
   "private": true,
-  "scripts": {
+  "scripts": {\n    "start": "uvicorn main:app --host 0.0.0.0 --port 7331",
     "dev": "python main.py",
     "build": "echo 'Agent is Python-based'"
   },
